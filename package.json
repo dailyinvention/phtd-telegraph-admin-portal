@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/dailyinvention/phtd-telegraph-admin-portal/issues"
   },
-  "homepage": "https://github.com/dailyinvention/phtd-telegraph-admin-portal#readme"
+  "homepage": "https://github.com/dailyinvention/phtd-telegraph-admin-portal#readme",
+  "dependencies": {
+    "express": "^4.15.4"
+  }
 }
