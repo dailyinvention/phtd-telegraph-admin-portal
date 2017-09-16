@@ -6,5 +6,5 @@ app.listen(3000, () => {
 })
 
 app.get('/', (request, response) => {
-  // do something here
+  response.sendFile(__dirname + '/index.html')
 })
