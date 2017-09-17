@@ -7,14 +7,17 @@ const jsonParser = bodyParser.json()
 
 let dbResponse
 
+// Create listener on port 3000
 app.listen(3000, () => {
   console.log('listening on 3000')
 })
 
+// At site root, load management page
 app.get('/', (request, response) => {
   response.sendFile(__dirname + '/site/index.html')
 })
 
+// When posting new messages store in database
 app.post('/new-message', jsonParser, (request, response) => {
   let message = JSON.parse(request.body).message
   let timestamp = Date.now()
@@ -22,11 +25,13 @@ app.post('/new-message', jsonParser, (request, response) => {
   response.send(dbResponse)
 })
 
+// Get all messages from database
 app.get('/get-messages', jsonParser, (request, response) => {
   dbResponse = queryDB('get-message', null)
   response.send(dbResponse)
 })
 
+// Funtion to handle query actions liking getting messages or posting messages.
 let queryDB = (request, obj) => {
   let response
   MongoClient.connect(url, (err, db) => {
