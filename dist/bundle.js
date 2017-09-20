@@ -114,7 +114,7 @@ var MainContainer = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     MainContainer.prototype.render = function () {
-        return this.props.messages;
+        return (React.createElement("div", null, this.props.messages));
     };
     return MainContainer;
 }(React.Component));

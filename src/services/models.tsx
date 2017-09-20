@@ -30,6 +30,7 @@ function callPromise (serviceType: string, url: string, payload?: object) {
 
 function getMessages () {
   let returnedMessages = this.callPromise('GET', '/get-messages')
+  return returnedMessages
 }
 
 export {getMessages}
