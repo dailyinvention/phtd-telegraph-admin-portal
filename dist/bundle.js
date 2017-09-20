@@ -78,8 +78,8 @@ module.exports = React;
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var ReactDOM = __webpack_require__(2);
-var Test_1 = __webpack_require__(3);
-ReactDOM.render(React.createElement(Test_1.Test, { compiler: "TypeScript", framework: "React" }), document.getElementById("portal"));
+var mainContainer_1 = __webpack_require__(3);
+ReactDOM.render(React.createElement(mainContainer_1.MainContainer, { messages: this.getMessages }), document.getElementById("portal"));
 
 
 /***/ }),
@@ -108,22 +108,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 // 'HelloProps' describes the shape of props.
 // State is never set so we use the 'undefined' type.
-var Test = /** @class */ (function (_super) {
-    __extends(Test, _super);
-    function Test() {
+var MainContainer = /** @class */ (function (_super) {
+    __extends(MainContainer, _super);
+    function MainContainer() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    Test.prototype.render = function () {
-        return React.createElement("h1", null,
-            "Hello from ",
-            this.props.compiler,
-            " and ",
-            this.props.framework,
-            "!");
+    MainContainer.prototype.render = function () {
+        return this.props.messages;
     };
-    return Test;
+    return MainContainer;
 }(React.Component));
-exports.Test = Test;
+exports.MainContainer = MainContainer;
 
 
 /***/ })

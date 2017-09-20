@@ -1,9 +1,10 @@
-import * as React from "react";
-import * as ReactDOM from "react-dom";
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
 
-import { Test } from "./components/Test";
+import { MainContainer } from './components/mainContainer'
+import { getMessages } from './services/models'
 
 ReactDOM.render(
-    <Test compiler="TypeScript" framework="React" />,
+    <MainContainer messages={this.getMessages} />,
     document.getElementById("portal")
 );
