@@ -1,5 +1,5 @@
 
-function callPromise (serviceType: string, url: string, payload?: object) {
+export function callPromise(serviceType: string, url: string, payload?: object) {
   return new Promise((resolve, reject) => {
     let xhr = new XMLHttpRequest()
     xhr.open(serviceType, url)
@@ -28,9 +28,7 @@ function callPromise (serviceType: string, url: string, payload?: object) {
   })
 }
 
-function getMessages () {
+export function getMessages () {
   let returnedMessages = this.callPromise('GET', '/get-messages')
   return returnedMessages
 }
-
-export {getMessages}

@@ -1,13 +1,13 @@
 import * as React from 'react'
+import { Messages } from './messages'
 
-export interface InitialProps { messages: object }
+export interface InitialProps { messages: Array<any> }
 
-// 'HelloProps' describes the shape of props.
-// State is never set so we use the 'undefined' type.
+// Initial main container object
 export class MainContainer extends React.Component<InitialProps, undefined> {
     render() {
         return (
-          <div>{ this.props.messages }</div>
+          <Messages messages={this.props.messages} />
         )
     }
 }
