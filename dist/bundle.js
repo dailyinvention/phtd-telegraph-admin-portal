@@ -112,10 +112,18 @@ var messages_1 = __webpack_require__(4);
 var MainContainer = /** @class */ (function (_super) {
     __extends(MainContainer, _super);
     function MainContainer() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.state = { messages: _this.props.messages };
+        _this.getMessages = function (messages) {
+            messages.then(function (result) {
+                _this.state.messages = JSON.parse(result);
+            });
+        };
+        return _this;
     }
     MainContainer.prototype.render = function () {
-        return (React.createElement(messages_1.Messages, { messages: this.props.messages }));
+        this.getMessages(this.props.messages);
+        return (React.createElement(messages_1.Messages, { messages: this.state.messages }));
     };
     return MainContainer;
 }(React.Component));

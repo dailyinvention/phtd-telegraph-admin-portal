@@ -1,13 +1,22 @@
 import * as React from 'react'
 import { Messages } from './messages'
 
-export interface InitialProps { messages: Array<any> }
+interface Props { messages: any }
+interface State { messages: any }
 
 // Initial main container object
-export class MainContainer extends React.Component<InitialProps, undefined> {
-    render() {
+export class MainContainer extends React.Component<Props, State> {
+ 
+    state = {messages: this.props.messages}
+    public getMessages = (messages: any) => {
+      messages.then((result: any) => {
+        this.state.messages = JSON.parse(result)
+      })
+    }
+    render () {
+        this.getMessages(this.props.messages)
         return (
-          <Messages messages={this.props.messages} />
+          <Messages messages={this.state.messages} />
         )
     }
 }

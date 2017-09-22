@@ -23,22 +23,25 @@ app.use(express.static(path.join(__dirname, 'node_modules')))
 app.use(express.static(path.join(__dirname, 'dist')))
 
 // When posting new messages store in database
-app.post('new-message', jsonParser, (request, response) => {
+app.post('/new-message', jsonParser, (request, response) => {
   let message = JSON.parse(request.body).message
   let timestamp = Date.now()
-  dbResponse = queryDB('/new-message', { 'message': message, 'timestamp': timestamp })
-  response.send(dbResponse)
+  dbResponse = queryDB('/new-message', { 'message': message, 'timestamp': timestamp }, () => {
+    response.send(dbResponse)
+  })
 })
 
 // Get all messages from database
 app.get('/get-messages', jsonParser, (request, response) => {
-  dbResponse = queryDB('get-messages', null)
-  console.log('dbResponse: ' + dbResponse)
-  response.send(dbResponse)
+  queryDB('get-messages', null, (dbResponse) => {
+    console.log('dbResponse: ' + dbResponse)
+    response.type('json')
+    response.json(dbResponse)
+  })
 })
 
 // Funtion to handle query actions liking getting messages or posting messages.
-let queryDB = (request, obj) => {
+let queryDB = (request, obj, callback) => {
   let response
   MongoClient.connect(url, (err, db) => {
     let collection
@@ -54,14 +57,15 @@ let queryDB = (request, obj) => {
         collection.find().toArray(function (err, items) {
           if (err) {
             console.log(err)
+            callback(err)
           } else {
             console.log(items)
             response = items
+            callback(response)
           }
         })
         break
     }
     db.close()
   })
-  return response
 }
