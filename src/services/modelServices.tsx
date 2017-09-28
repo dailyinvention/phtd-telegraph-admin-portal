@@ -1,16 +1,15 @@
 
- export function callPromise(serviceType: string, url: string, payload?: object) {
+ export function callPromise(serviceType: string, url: string, payload?: object, done?: (err: string, data: string) => void) {
   return new Promise((resolve: any, reject: any) => {
     let xhr = new XMLHttpRequest()
     xhr.open(serviceType, url)
     xhr.onload = () => {
-      if (this.status >= 200 && this.status < 300) {
+      if (xhr.status >= 200 && xhr.status < 300) {
         resolve(xhr.response)
+        done(null, xhr.response)
       } else {
-        reject({
-          status: this.status,
-          statusText: xhr.statusText
-        })
+        resolve(xhr.response)
+        done(xhr.response, null)
       }
     }
     xhr.onerror = () => {
@@ -26,9 +25,4 @@
       xhr.send()
     }
   })
-}
-
-export function getMessages () {
-  let returnedMessages = this.callPromise('GET', '/get-messages')
-  return returnedMessages
 }
