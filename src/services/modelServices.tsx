@@ -4,12 +4,8 @@
     let xhr = new XMLHttpRequest()
     xhr.open(serviceType, url)
     xhr.onload = () => {
-      if (xhr.status >= 200 && xhr.status < 300) {
+      if (xhr.status >= 200) {
         resolve(xhr.response)
-        done(null, xhr.response)
-      } else {
-        resolve(xhr.response)
-        done(xhr.response, null)
       }
     }
     xhr.onerror = () => {

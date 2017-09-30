@@ -1,18 +1,19 @@
 import { action, observable } from 'mobx'
+import { observer } from 'mobx-react'
 import { callPromise } from '../services/modelServices'
-
 
 class MessagesStore {
   @observable messages: object[] = []
+  @observable state: string = 'pending'
 
   @action getMessages () {
     let returnedMessages
-    callPromise('GET', '/get-messages', null, (err: string, data: string) => {
+    callPromise('GET', '/get-messages', null).then((data: string) => {
+      this.messages = []
       if (data) {
-        returnedMessages = JSON.parse(data)
+        this.messages = JSON.parse(data)
       }
     })
-    this.messages = returnedMessages
   }
 }
 
