@@ -4811,7 +4811,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var mobx_react_1 = __webpack_require__(1);
 var messages_1 = __webpack_require__(7);
-var controlStore_1 = __webpack_require__(9);
+var controls_1 = __webpack_require__(9);
+var controlStore_1 = __webpack_require__(11);
 // Initial main container object
 var MainContainer = /** @class */ (function (_super) {
     __extends(MainContainer, _super);
@@ -4823,7 +4824,9 @@ var MainContainer = /** @class */ (function (_super) {
     };
     MainContainer.prototype.render = function () {
         this.controls = controlStore_1.default.controls;
-        return (React.createElement(messages_1.Messages, { controls: this.controls }));
+        return (React.createElement("div", null,
+            React.createElement(messages_1.Messages, { controls: this.controls }),
+            React.createElement(controls_1.Controls, { controls: this.controls })));
     };
     MainContainer = __decorate([
         mobx_react_1.observer
@@ -4959,6 +4962,119 @@ exports.Message = Message;
 
 "use strict";
 
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(0);
+var mobx_react_1 = __webpack_require__(1);
+var control_1 = __webpack_require__(10);
+// Messages container part
+var Controls = /** @class */ (function (_super) {
+    __extends(Controls, _super);
+    function Controls() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.controlList = [];
+        return _this;
+    }
+    Controls.prototype.render = function () {
+        var _this = this;
+        if (this.props.controls) {
+            this.props.controls.controls.map(function (messageObj, idx) {
+                _this.controlList.push(React.createElement(control_1.Control, { key: idx, type: messageObj.type, label: messageObj.label, name: messageObj.name, value: (messageObj.value !== null) ? 1000 : messageObj.value }));
+            });
+        }
+        return (React.createElement("ul", null, (this.controlList[0]) && this.controlList));
+    };
+    Controls = __decorate([
+        mobx_react_1.observer
+    ], Controls);
+    return Controls;
+}(React.Component));
+exports.Controls = Controls;
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(0);
+var mobx_react_1 = __webpack_require__(1);
+// Messages container part
+var Control = /** @class */ (function (_super) {
+    __extends(Control, _super);
+    function Control(props) {
+        var _this = _super.call(this, props) || this;
+        _this.handleChange = function (e) {
+            _this.setState({
+                fieldValue: e.target.value
+            });
+        };
+        _this.state = {
+            fieldValue: props.fieldValue || 1000
+        };
+        return _this;
+    }
+    Control.prototype.componentWillMount = function () {
+        var _this = this;
+        switch (this.props.type) {
+            case 'number':
+                this.controlComp = (React.createElement("label", null,
+                    this.props.label,
+                    " ",
+                    React.createElement("input", { type: this.props.type, name: this.props.name, value: this.state.fieldValue, onChange: function (e) { return _this.handleChange(e); } })));
+                break;
+        }
+    };
+    Control.prototype.render = function () {
+        return (React.createElement("li", null, this.controlComp));
+    };
+    Control = __decorate([
+        mobx_react_1.observer
+    ], Control);
+    return Control;
+}(React.Component));
+exports.Control = Control;
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -4967,7 +5083,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var mobx_1 = __webpack_require__(3);
-var modelServices_1 = __webpack_require__(10);
+var modelServices_1 = __webpack_require__(12);
 var ControlStore = /** @class */ (function () {
     function ControlStore() {
     }
@@ -4994,7 +5110,7 @@ exports.default = controlStore;
 
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

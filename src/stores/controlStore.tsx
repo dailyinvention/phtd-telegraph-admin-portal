@@ -6,8 +6,16 @@ class ControlStore {
   @observable controls: { messages: object[], controls: object[] }
 
   @action getControls () {
-    let returnedMessages
     callPromise('GET', '/get-controls', null).then((data: string) => {
+      this.controls = { messages: [], controls: [] }
+      if (data) {
+        this.controls = JSON.parse(data)
+      }
+    })
+  }
+
+  @action updateControlValue (name) {
+    callPromise('PUT', '/update-control-value', {}).then((data: string) => {
       this.controls = { messages: [], controls: [] }
       if (data) {
         this.controls = JSON.parse(data)

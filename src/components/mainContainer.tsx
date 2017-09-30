@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
 import { Messages } from './messages'
+import { Controls } from './controls'
 import controlStore from '../stores/controlStore'
 
 // Initial main container object
@@ -15,7 +16,10 @@ export class MainContainer extends React.Component<null, null> {
   render() {
     this.controls = controlStore.controls
     return (
-      <Messages controls={this.controls} />
+      <div>
+        <Messages controls={this.controls} />
+        <Controls controls={this.controls} />
+      </div>
     )
 
   }

@@ -45,6 +45,21 @@ app.get('/get-controls', jsonParser, (request, response) => {
   })
 })
 
+// Updates control value
+app.put('/update-control-value', jsonParser, (request, response) => {
+  console.log(request.body)
+  let type = request.body.type
+  let label = request.body.label
+  let name = request.body.name
+  let value = request.body.value
+  let order = request.body.value
+  queryDB('update-control-value', { 'type': type, 'label': label, 'name': name, 'value': value, 'order': order }, (dbResponse) => {
+    console.log('dbResponse: ' + dbResponse)
+    response.type('json')
+    response.json(dbResponse)
+  })
+})
+
 // Funtion to handle query actions liking getting messages or posting messages.
 let queryDB = (request, obj, callback) => {
   let response
@@ -67,6 +82,27 @@ let queryDB = (request, obj, callback) => {
             db.close()
           })
         })
+        break
+      case 'update-control-value':
+        collection = db.collection('controls')
+        collection.update(
+          { 'name': obj.name },
+          { 'type': obj.type,
+            'label': obj.label,
+            'name': obj.name,
+            'value': obj.value,
+            'order': obj.order
+         },
+          (err, result) => {
+            if (result) {
+              callback(result)
+            }
+            if (err) {
+              callback(err)
+            }
+            db.close()
+          }
+        )
         break
     }
   })
