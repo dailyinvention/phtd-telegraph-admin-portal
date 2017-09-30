@@ -1,5 +1,5 @@
 
- export function callPromise(serviceType: string, url: string, payload?: object, done?: (err: string, data: string) => void) {
+ export function callPromise(serviceType: string, url: string, payload?: object) {
   return new Promise((resolve: any, reject: any) => {
     let xhr = new XMLHttpRequest()
     xhr.open(serviceType, url)
