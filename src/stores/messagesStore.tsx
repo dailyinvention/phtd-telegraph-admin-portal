@@ -4,7 +4,6 @@ import { callPromise } from '../services/modelServices'
 
 class MessagesStore {
   @observable messages: object[] = []
-  @observable state: string = 'pending'
 
   @action getMessages () {
     let returnedMessages
