@@ -71,12 +71,6 @@ module.exports = React;
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports) {
-
-module.exports = ReactDOM;
-
-/***/ }),
-/* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -95,7 +89,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_mobx__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_dom__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_dom__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_dom___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_react_dom__);
 
 
@@ -1083,6 +1077,12 @@ if ((typeof __MOBX_DEVTOOLS_GLOBAL_HOOK__ === 'undefined' ? 'undefined' : _typeo
 
 
 
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+module.exports = ReactDOM;
 
 /***/ }),
 /* 3 */
@@ -4770,7 +4770,7 @@ if (typeof __MOBX_DEVTOOLS_GLOBAL_HOOK__ === "object") {
 
 /* harmony default export */ __webpack_exports__["default"] = (everything);
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(7)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(6)))
 
 /***/ }),
 /* 4 */
@@ -4780,46 +4780,13 @@ if (typeof __MOBX_DEVTOOLS_GLOBAL_HOOK__ === "object") {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var ReactDOM = __webpack_require__(1);
+var ReactDOM = __webpack_require__(2);
 var mainContainer_1 = __webpack_require__(5);
 ReactDOM.render(React.createElement(mainContainer_1.MainContainer, null), document.getElementById("portal"));
 
 
 /***/ }),
 /* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var React = __webpack_require__(0);
-var messages_1 = __webpack_require__(6);
-// Initial main container object
-var MainContainer = /** @class */ (function (_super) {
-    __extends(MainContainer, _super);
-    function MainContainer() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    MainContainer.prototype.render = function () {
-        return (React.createElement(messages_1.Messages, null));
-    };
-    return MainContainer;
-}(React.Component));
-exports.MainContainer = MainContainer;
-
-
-/***/ }),
-/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4842,40 +4809,32 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var mobx_react_1 = __webpack_require__(2);
-var message_1 = __webpack_require__(8);
-var messagesStore_1 = __webpack_require__(9);
-// Messages container part
-var Messages = /** @class */ (function (_super) {
-    __extends(Messages, _super);
-    function Messages() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.messageList = [];
-        return _this;
+var mobx_react_1 = __webpack_require__(1);
+var messages_1 = __webpack_require__(7);
+var controlStore_1 = __webpack_require__(9);
+// Initial main container object
+var MainContainer = /** @class */ (function (_super) {
+    __extends(MainContainer, _super);
+    function MainContainer() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-    Messages.prototype.componentWillMount = function () {
-        messagesStore_1.default.getMessages();
+    MainContainer.prototype.componentWillMount = function () {
+        controlStore_1.default.getControls();
     };
-    Messages.prototype.render = function () {
-        var _this = this;
-        this.messages = messagesStore_1.default.messages;
-        if (this.messages instanceof Array) {
-            this.messages.map(function (messageObj, idx) {
-                _this.messageList.push(React.createElement(message_1.Message, { key: idx }, messageObj.message));
-            });
-        }
-        return (React.createElement("ul", null, (this.messageList[0]) && this.messageList));
+    MainContainer.prototype.render = function () {
+        this.controls = controlStore_1.default.controls;
+        return (React.createElement(messages_1.Messages, { controls: this.controls }));
     };
-    Messages = __decorate([
+    MainContainer = __decorate([
         mobx_react_1.observer
-    ], Messages);
-    return Messages;
+    ], MainContainer);
+    return MainContainer;
 }(React.Component));
-exports.Messages = Messages;
+exports.MainContainer = MainContainer;
 
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports) {
 
 var g;
@@ -4902,6 +4861,57 @@ module.exports = g;
 
 
 /***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(0);
+var mobx_react_1 = __webpack_require__(1);
+var message_1 = __webpack_require__(8);
+// Messages container part
+var Messages = /** @class */ (function (_super) {
+    __extends(Messages, _super);
+    function Messages() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.messageList = [];
+        return _this;
+    }
+    Messages.prototype.render = function () {
+        var _this = this;
+        if (this.props.controls) {
+            this.props.controls.messages.map(function (messageObj, idx) {
+                _this.messageList.push(React.createElement(message_1.Message, { key: idx }, messageObj.message));
+            });
+        }
+        return (React.createElement("ul", null, (this.messageList[0]) && this.messageList));
+    };
+    Messages = __decorate([
+        mobx_react_1.observer
+    ], Messages);
+    return Messages;
+}(React.Component));
+exports.Messages = Messages;
+
+
+/***/ }),
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4925,7 +4935,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var mobx_react_1 = __webpack_require__(2);
+var mobx_react_1 = __webpack_require__(1);
 // Messages container part
 var Message = /** @class */ (function (_super) {
     __extends(Message, _super);
@@ -4958,34 +4968,29 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var mobx_1 = __webpack_require__(3);
 var modelServices_1 = __webpack_require__(10);
-var MessagesStore = /** @class */ (function () {
-    function MessagesStore() {
-        this.messages = [];
-        this.state = 'pending';
+var ControlStore = /** @class */ (function () {
+    function ControlStore() {
     }
-    MessagesStore.prototype.getMessages = function () {
+    ControlStore.prototype.getControls = function () {
         var _this = this;
         var returnedMessages;
-        modelServices_1.callPromise('GET', '/get-messages', null).then(function (data) {
-            _this.messages = [];
+        modelServices_1.callPromise('GET', '/get-controls', null).then(function (data) {
+            _this.controls = { messages: [], controls: [] };
             if (data) {
-                _this.messages = JSON.parse(data);
+                _this.controls = JSON.parse(data);
             }
         });
     };
     __decorate([
         mobx_1.observable
-    ], MessagesStore.prototype, "messages", void 0);
-    __decorate([
-        mobx_1.observable
-    ], MessagesStore.prototype, "state", void 0);
+    ], ControlStore.prototype, "controls", void 0);
     __decorate([
         mobx_1.action
-    ], MessagesStore.prototype, "getMessages", null);
-    return MessagesStore;
+    ], ControlStore.prototype, "getControls", null);
+    return ControlStore;
 }());
-var messagesStore = new MessagesStore;
-exports.default = messagesStore;
+var controlStore = new ControlStore;
+exports.default = controlStore;
 
 
 /***/ }),
@@ -4995,7 +5000,7 @@ exports.default = messagesStore;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-function callPromise(serviceType, url, payload, done) {
+function callPromise(serviceType, url, payload) {
     var _this = this;
     return new Promise(function (resolve, reject) {
         var xhr = new XMLHttpRequest();

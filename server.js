@@ -37,8 +37,8 @@ app.post('/new-message', jsonParser, (request, response) => {
 })
 
 // Get all messages from database
-app.get('/get-messages', jsonParser, (request, response) => {
-  queryDB('get-messages', null, (dbResponse) => {
+app.get('/get-controls', jsonParser, (request, response) => {
+  queryDB('get-controls', null, (dbResponse) => {
     console.log('dbResponse: ' + dbResponse)
     response.type('json')
     response.json(dbResponse)
@@ -50,27 +50,35 @@ let queryDB = (request, obj, callback) => {
   let response
   MongoClient.connect(url, (err, db) => {
     let collection
-    console.log('Request: ', request)
     switch (request) {
       case 'new-message':
         collection = db.collection('messages')
         collection.insert(obj)
         response = 'Message successfully stored.'
+        db.close()
         break
-      case 'get-messages':
-        collection = db.collection('messages')
-        collection.find().toArray(function (err, items) {
-          if (err) {
-            console.log(err)
-            callback(err)
-          } else {
-            console.log(items)
-            response = items
-            callback(response)
-          }
+      case 'get-controls':
+        let controlResponse = {}
+        loadItems(db.collection('controls'), (controlsItems) => {
+          controlResponse.controls = controlsItems
+          loadItems(db.collection('messages'), (messagesItems) => {
+            controlResponse.messages = messagesItems
+            callback(controlResponse)
+            db.close()
+          })
         })
         break
     }
-    db.close()
+  })
+}
+
+let loadItems = (collection, callback) => {
+  collection.find().toArray(function (err, items) {
+    if (err) {
+      console.log(err)
+      callback(err)
+    } else {
+      callback(items)
+    }
   })
 }
