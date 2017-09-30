@@ -22,6 +22,11 @@ app.get('/', (request, response) => {
 app.use(express.static(path.join(__dirname, 'node_modules')))
 app.use(express.static(path.join(__dirname, 'dist')))
 
+app.get('/*', (req, res, next) => {
+  res.setHeader('Last-Modified', (new Date()).toUTCString())
+  next()
+})
+
 // When posting new messages store in database
 app.post('/new-message', jsonParser, (request, response) => {
   let message = JSON.parse(request.body).message

@@ -4873,7 +4873,7 @@ function callPromise(serviceType, url, payload, done) {
         var xhr = new XMLHttpRequest();
         xhr.open(serviceType, url);
         xhr.onload = function () {
-            if (xhr.status >= 200) {
+            if (xhr.status >= 200 && xhr.status < 300) {
                 resolve(xhr.response);
             }
         };
