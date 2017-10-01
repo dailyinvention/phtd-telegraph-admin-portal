@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -86,10 +86,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useStaticRendering", function() { return useStaticRendering; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Provider", function() { return Provider; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "inject", function() { return inject; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_mobx__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_mobx__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_dom__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_dom__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_dom___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_react_dom__);
 
 
@@ -1080,12 +1080,6 @@ if ((typeof __MOBX_DEVTOOLS_GLOBAL_HOOK__ === 'undefined' ? 'undefined' : _typeo
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports) {
-
-module.exports = ReactDOM;
-
-/***/ }),
-/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4770,7 +4764,13 @@ if (typeof __MOBX_DEVTOOLS_GLOBAL_HOOK__ === "object") {
 
 /* harmony default export */ __webpack_exports__["default"] = (everything);
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(6)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(7)))
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+module.exports = ReactDOM;
 
 /***/ }),
 /* 4 */
@@ -4778,15 +4778,64 @@ if (typeof __MOBX_DEVTOOLS_GLOBAL_HOOK__ === "object") {
 
 "use strict";
 
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var React = __webpack_require__(0);
-var ReactDOM = __webpack_require__(2);
-var mainContainer_1 = __webpack_require__(5);
-ReactDOM.render(React.createElement(mainContainer_1.MainContainer, null), document.getElementById("portal"));
+var mobx_1 = __webpack_require__(2);
+var modelServices_1 = __webpack_require__(12);
+var ControlStore = /** @class */ (function () {
+    function ControlStore() {
+    }
+    ControlStore.prototype.getControls = function () {
+        var _this = this;
+        modelServices_1.callPromise('GET', '/get-controls', null).then(function (data) {
+            _this.controls = { messages: [], controls: [] };
+            if (data) {
+                _this.controls = JSON.parse(data);
+            }
+        });
+    };
+    ControlStore.prototype.updateControlValue = function (payload) {
+        modelServices_1.callPromise('PUT', '/update-control-value', payload).then(function (data) {
+            if (data) {
+                console.log(data);
+            }
+        });
+    };
+    __decorate([
+        mobx_1.observable
+    ], ControlStore.prototype, "controls", void 0);
+    __decorate([
+        mobx_1.action
+    ], ControlStore.prototype, "getControls", null);
+    __decorate([
+        mobx_1.action
+    ], ControlStore.prototype, "updateControlValue", null);
+    return ControlStore;
+}());
+var controlStore = new ControlStore;
+exports.default = controlStore;
 
 
 /***/ }),
 /* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(0);
+var ReactDOM = __webpack_require__(3);
+var mainContainer_1 = __webpack_require__(6);
+ReactDOM.render(React.createElement(mainContainer_1.MainContainer, null), document.getElementById("portal"));
+
+
+/***/ }),
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4810,9 +4859,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var mobx_react_1 = __webpack_require__(1);
-var messages_1 = __webpack_require__(7);
-var controls_1 = __webpack_require__(9);
-var controlStore_1 = __webpack_require__(11);
+var messages_1 = __webpack_require__(8);
+var controls_1 = __webpack_require__(10);
+var controlStore_1 = __webpack_require__(4);
 // Initial main container object
 var MainContainer = /** @class */ (function (_super) {
     __extends(MainContainer, _super);
@@ -4837,7 +4886,7 @@ exports.MainContainer = MainContainer;
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports) {
 
 var g;
@@ -4864,7 +4913,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4888,7 +4937,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var mobx_react_1 = __webpack_require__(1);
-var message_1 = __webpack_require__(8);
+var message_1 = __webpack_require__(9);
 // Messages container part
 var Messages = /** @class */ (function (_super) {
     __extends(Messages, _super);
@@ -4915,7 +4964,7 @@ exports.Messages = Messages;
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4957,57 +5006,6 @@ exports.Message = Message;
 
 
 /***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var React = __webpack_require__(0);
-var mobx_react_1 = __webpack_require__(1);
-var control_1 = __webpack_require__(10);
-// Messages container part
-var Controls = /** @class */ (function (_super) {
-    __extends(Controls, _super);
-    function Controls() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.controlList = [];
-        return _this;
-    }
-    Controls.prototype.render = function () {
-        var _this = this;
-        if (this.props.controls) {
-            this.props.controls.controls.map(function (messageObj, idx) {
-                _this.controlList.push(React.createElement(control_1.Control, { key: idx, type: messageObj.type, label: messageObj.label, name: messageObj.name, value: (messageObj.value !== null) ? 1000 : messageObj.value }));
-            });
-        }
-        return (React.createElement("ul", null, (this.controlList[0]) && this.controlList));
-    };
-    Controls = __decorate([
-        mobx_react_1.observer
-    ], Controls);
-    return Controls;
-}(React.Component));
-exports.Controls = Controls;
-
-
-/***/ }),
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5032,41 +5030,30 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var mobx_react_1 = __webpack_require__(1);
+var control_1 = __webpack_require__(11);
 // Messages container part
-var Control = /** @class */ (function (_super) {
-    __extends(Control, _super);
-    function Control(props) {
-        var _this = _super.call(this, props) || this;
-        _this.handleChange = function (e) {
-            _this.setState({
-                fieldValue: e.target.value
-            });
-        };
-        _this.state = {
-            fieldValue: props.fieldValue || 1000
-        };
+var Controls = /** @class */ (function (_super) {
+    __extends(Controls, _super);
+    function Controls() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.controlList = [];
         return _this;
     }
-    Control.prototype.componentWillMount = function () {
+    Controls.prototype.render = function () {
         var _this = this;
-        switch (this.props.type) {
-            case 'number':
-                this.controlComp = (React.createElement("label", null,
-                    this.props.label,
-                    " ",
-                    React.createElement("input", { type: this.props.type, name: this.props.name, value: this.state.fieldValue, onChange: function (e) { return _this.handleChange(e); } })));
-                break;
+        if (this.props.controls) {
+            this.props.controls.controls.map(function (messageObj, idx) {
+                _this.controlList.push(React.createElement(control_1.Control, { key: idx, type: messageObj.type, label: messageObj.label, name: messageObj.name, value: messageObj.value, order: messageObj.order, controls: _this.props.controls }));
+            });
         }
+        return (React.createElement("ul", null, (this.controlList[0]) && this.controlList));
     };
-    Control.prototype.render = function () {
-        return (React.createElement("li", null, this.controlComp));
-    };
-    Control = __decorate([
+    Controls = __decorate([
         mobx_react_1.observer
-    ], Control);
-    return Control;
+    ], Controls);
+    return Controls;
 }(React.Component));
-exports.Control = Control;
+exports.Controls = Controls;
 
 
 /***/ }),
@@ -5075,6 +5062,16 @@ exports.Control = Control;
 
 "use strict";
 
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -5082,31 +5079,53 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var mobx_1 = __webpack_require__(3);
-var modelServices_1 = __webpack_require__(12);
-var ControlStore = /** @class */ (function () {
-    function ControlStore() {
+var React = __webpack_require__(0);
+var mobx_react_1 = __webpack_require__(1);
+var mobx_1 = __webpack_require__(2);
+var controlStore_1 = __webpack_require__(4);
+// Messages container part
+var Control = /** @class */ (function (_super) {
+    __extends(Control, _super);
+    function Control() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.handleChange = function (e) {
+            _this.fieldValue = e.target.value;
+            var payload = {
+                type: _this.props.type,
+                label: _this.props.label,
+                name: _this.props.name,
+                value: _this.fieldValue,
+                order: _this.props.order
+            };
+            controlStore_1.default.updateControlValue(payload);
+            //controlStore.getControls()
+        };
+        return _this;
     }
-    ControlStore.prototype.getControls = function () {
+    Control.prototype.componentWillMount = function () {
+        this.fieldValue = this.props.value;
+    };
+    Control.prototype.render = function () {
         var _this = this;
-        var returnedMessages;
-        modelServices_1.callPromise('GET', '/get-controls', null).then(function (data) {
-            _this.controls = { messages: [], controls: [] };
-            if (data) {
-                _this.controls = JSON.parse(data);
-            }
-        });
+        switch (this.props.type) {
+            case 'number':
+                this.controlComp = (React.createElement("label", null,
+                    this.props.label,
+                    " ",
+                    React.createElement("input", { type: this.props.type, name: this.props.name, value: this.fieldValue, onChange: function (e) { return _this.handleChange(e); } })));
+                break;
+        }
+        return (React.createElement("li", null, this.controlComp));
     };
     __decorate([
         mobx_1.observable
-    ], ControlStore.prototype, "controls", void 0);
-    __decorate([
-        mobx_1.action
-    ], ControlStore.prototype, "getControls", null);
-    return ControlStore;
-}());
-var controlStore = new ControlStore;
-exports.default = controlStore;
+    ], Control.prototype, "fieldValue", void 0);
+    Control = __decorate([
+        mobx_react_1.observer
+    ], Control);
+    return Control;
+}(React.Component));
+exports.Control = Control;
 
 
 /***/ }),

@@ -9,12 +9,13 @@ interface Props {
 // Messages container part
 @observer
 export class Controls extends React.Component<Props, null> {
+  
   private controlList: Array<any> = []
 
   render() {
     if (this.props.controls) {
       this.props.controls.controls.map((messageObj: { type: string, label: string, name: string, value: number, order: number }, idx: number) => {
-        this.controlList.push(<Control key={idx} type={messageObj.type} label={messageObj.label} name={messageObj.name} value={messageObj.value} />)
+        this.controlList.push(<Control key={idx} type={messageObj.type} label={messageObj.label} name={messageObj.name} value={messageObj.value} order={messageObj.order} controls={this.props.controls} />)
       })
     }
     return (

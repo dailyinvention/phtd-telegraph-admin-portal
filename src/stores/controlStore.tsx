@@ -14,11 +14,10 @@ class ControlStore {
     })
   }
 
-  @action updateControlValue (name) {
-    callPromise('PUT', '/update-control-value', {}).then((data: string) => {
-      this.controls = { messages: [], controls: [] }
+  @action updateControlValue (payload: Object) {
+    callPromise('PUT', '/update-control-value', payload).then((data: string) => {
       if (data) {
-        this.controls = JSON.parse(data)
+        console.log(data)
       }
     })
   }
