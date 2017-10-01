@@ -19,6 +19,7 @@ app.get('/', (request, response) => {
   response.sendFile(__dirname + '/site/index.html')
 })
 
+app.use(express.static(path.join(__dirname, 'site')))
 app.use(express.static(path.join(__dirname, 'node_modules')))
 app.use(express.static(path.join(__dirname, 'dist')))
 
@@ -33,6 +34,16 @@ app.post('/new-message', jsonParser, (request, response) => {
   let timestamp = Date.now()
   dbResponse = queryDB('/new-message', { 'message': message, 'timestamp': timestamp }, () => {
     response.send(dbResponse)
+  })
+})
+
+// When posting new messages store in database
+app.delete('/delete-message', jsonParser, (request, response) => {
+  let timestamp = request.body.timestamp
+  queryDB('delete-message', { 'timestamp': timestamp }, (dbResponse) => {
+    console.log(dbResponse)
+    response.type('json')
+    response.json(dbResponse)
   })
 })
 
@@ -52,7 +63,7 @@ app.put('/update-control-value', jsonParser, (request, response) => {
   let label = request.body.label
   let name = request.body.name
   let value = request.body.value
-  let order = request.body.value
+  let order = request.body.order
   queryDB('update-control-value', { 'type': type, 'label': label, 'name': name, 'value': value, 'order': order }, (dbResponse) => {
     console.log('dbResponse: ' + dbResponse)
     response.type('json')
@@ -72,6 +83,19 @@ let queryDB = (request, obj, callback) => {
         response = 'Message successfully stored.'
         db.close()
         break
+      case 'delete-message':
+        collection = db.collection('messages')
+        collection.remove(obj, null, (err, result) => {
+          console.log(obj)
+          if (result) {
+            callback(result)
+          }
+          if (err) {
+            callback(err)
+          }
+          db.close()
+        })
+        break
       case 'get-controls':
         let controlResponse = {}
         loadItems(db.collection('controls'), (controlsItems) => {
@@ -90,8 +114,8 @@ let queryDB = (request, obj, callback) => {
           { 'type': obj.type,
             'label': obj.label,
             'name': obj.name,
-            'value': obj.value,
-            'order': obj.order
+            'value': parseInt(obj.value),
+            'order': parseInt(obj.order)
          },
           (err, result) => {
             if (result) {

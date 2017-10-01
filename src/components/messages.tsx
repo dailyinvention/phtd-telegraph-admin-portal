@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
 import { Message } from './parts/message'
+import { Button as DeleteButton} from './parts/button'
 
 interface Props {
   controls: { messages: Array<object> }
@@ -13,8 +14,13 @@ export class Messages extends React.Component<Props, null> {
 
   render() {
     if (this.props.controls) {
-      this.props.controls.messages.map((messageObj: { message: string }, idx: number) => {
-        this.messageList.push(<Message key={idx}>{messageObj.message}</Message>)
+      this.props.controls.messages.map((messageObj: { message: string, timestamp: number }) => {
+        this.messageList.push(
+          <div key={messageObj.timestamp}>
+            <Message>{messageObj.message}</Message>
+            <DeleteButton imageSrc={'/site/images/deletecustom.png'} imageAlt={'Delete button'} />
+          </div>
+        )
       })
     }
     return (
