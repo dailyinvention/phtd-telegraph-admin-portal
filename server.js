@@ -19,9 +19,9 @@ app.get('/', (request, response) => {
   response.sendFile(__dirname + '/site/index.html')
 })
 
-app.use(express.static(path.join(__dirname, 'site')))
 app.use(express.static(path.join(__dirname, 'node_modules')))
 app.use(express.static(path.join(__dirname, 'dist')))
+app.use(express.static(path.join(__dirname, 'site')))
 
 app.get('/*', (req, res, next) => {
   res.setHeader('Last-Modified', (new Date()).toUTCString())

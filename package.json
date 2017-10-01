@@ -19,6 +19,7 @@
   "homepage": "https://github.com/dailyinvention/phtd-telegraph-admin-portal#readme",
   "dependencies": {
     "@types/es6-promise": "0.0.33",
+    "@types/node": "^8.0.31",
     "@types/react": "^16.0.7",
     "@types/react-dom": "^15.5.5",
     "body-parser": "^1.18.2",

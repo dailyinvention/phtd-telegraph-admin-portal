@@ -4806,6 +4806,13 @@ var ControlStore = /** @class */ (function () {
             }
         });
     };
+    ControlStore.prototype.deleteMessage = function (payload) {
+        modelServices_1.callPromise('DELETE', '/delete-message', payload).then(function (data) {
+            if (data) {
+                console.log(data);
+            }
+        });
+    };
     __decorate([
         mobx_1.observable
     ], ControlStore.prototype, "controls", void 0);
@@ -4815,6 +4822,9 @@ var ControlStore = /** @class */ (function () {
     __decorate([
         mobx_1.action
     ], ControlStore.prototype, "updateControlValue", null);
+    __decorate([
+        mobx_1.action
+    ], ControlStore.prototype, "deleteMessage", null);
     return ControlStore;
 }());
 var controlStore = new ControlStore;
@@ -4873,8 +4883,9 @@ var MainContainer = /** @class */ (function (_super) {
     };
     MainContainer.prototype.render = function () {
         this.controls = controlStore_1.default.controls;
+        this.store = controlStore_1.default;
         return (React.createElement("div", null,
-            React.createElement(messages_1.Messages, { controls: this.controls }),
+            React.createElement(messages_1.Messages, { controls: this.controls, store: this.store }),
             React.createElement(controls_1.Controls, { controls: this.controls })));
     };
     MainContainer = __decorate([
@@ -4944,13 +4955,20 @@ var Messages = /** @class */ (function (_super) {
     function Messages() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.messageList = [];
+        _this.deleteClick = function (timestamp) {
+            _this.props.store.deleteMessage({ 'timestamp': timestamp });
+            _this.props.store.getControls();
+        };
         return _this;
     }
     Messages.prototype.render = function () {
         var _this = this;
         if (this.props.controls) {
-            this.props.controls.messages.map(function (messageObj, idx) {
-                _this.messageList.push(React.createElement(message_1.Message, { key: idx }, messageObj.message));
+            this.props.controls.messages.map(function (messageObj) {
+                _this.messageList.push(React.createElement("div", { key: messageObj.timestamp },
+                    React.createElement(message_1.Message, null, messageObj.message),
+                    React.createElement("button", { onClick: function (e) { _this.deleteClick(messageObj.timestamp); } },
+                        React.createElement("img", { src: '/images/deletecustom.png', alt: 'Delete button' }))));
             });
         }
         return (React.createElement("ul", null, (this.messageList[0]) && this.messageList));
