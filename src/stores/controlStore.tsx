@@ -26,6 +26,7 @@ class ControlStore {
     callPromise('DELETE', '/delete-message', payload).then((data: string) => {
       if (data) {
         console.log(data)
+        this.getControls()
       }
     })
   }

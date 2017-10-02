@@ -4807,9 +4807,11 @@ var ControlStore = /** @class */ (function () {
         });
     };
     ControlStore.prototype.deleteMessage = function (payload) {
+        var _this = this;
         modelServices_1.callPromise('DELETE', '/delete-message', payload).then(function (data) {
             if (data) {
                 console.log(data);
+                _this.getControls();
             }
         });
     };
@@ -4957,13 +4959,13 @@ var Messages = /** @class */ (function (_super) {
         _this.messageList = [];
         _this.deleteClick = function (timestamp) {
             _this.props.store.deleteMessage({ 'timestamp': timestamp });
-            _this.props.store.getControls();
         };
         return _this;
     }
     Messages.prototype.render = function () {
         var _this = this;
         if (this.props.controls) {
+            this.messageList = [];
             this.props.controls.messages.map(function (messageObj) {
                 _this.messageList.push(React.createElement("div", { key: messageObj.timestamp },
                     React.createElement(message_1.Message, null, messageObj.message),
@@ -5060,6 +5062,7 @@ var Controls = /** @class */ (function (_super) {
     Controls.prototype.render = function () {
         var _this = this;
         if (this.props.controls) {
+            this.controlList = [];
             this.props.controls.controls.map(function (messageObj, idx) {
                 _this.controlList.push(React.createElement(control_1.Control, { key: idx, type: messageObj.type, label: messageObj.label, name: messageObj.name, value: messageObj.value, order: messageObj.order, controls: _this.props.controls }));
             });

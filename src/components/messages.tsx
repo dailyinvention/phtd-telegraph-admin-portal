@@ -14,11 +14,11 @@ export class Messages extends React.Component<Props, null> {
 
   private deleteClick = (timestamp: number) => {
     this.props.store.deleteMessage({'timestamp': timestamp})
-    this.props.store.getControls()
   }
 
   render() {
     if (this.props.controls) {
+      this.messageList = []
       this.props.controls.messages.map((messageObj: { message: string, timestamp: number }) => {
         this.messageList.push(
           <div key={messageObj.timestamp}>
