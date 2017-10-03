@@ -29,11 +29,22 @@ app.get('/*', (req, res, next) => {
 })
 
 // When posting new messages store in database
-app.post('/new-message', jsonParser, (request, response) => {
-  let message = JSON.parse(request.body).message
-  let timestamp = Date.now()
-  dbResponse = queryDB('/new-message', { 'message': message, 'timestamp': timestamp }, () => {
-    response.send(dbResponse)
+app.post('/new-messages', jsonParser, (request, response) => {
+  let messages = request.body.messages
+  console.log('Messages: ' + JSON.stringify(messages))
+  dbResponse = queryDB('new-messages', { 'messages': messages }, (dbResponse) => {
+    console.log(JSON.stringify(dbResponse))
+    response.type('json')
+    response.json(dbResponse)
+  })
+})
+
+app.post('/update-message', jsonParser, (request, response) => {
+  let messages = JSON.parse(request.body).messages
+  dbResponse = queryDB('update-message', { 'messages': messages }, (dbResponse) => {
+    console.log('dbResponse: ' + JSON.stringify(dbResponse))
+    response.type('json')
+    response.json(dbResponse)
   })
 })
 
@@ -77,11 +88,23 @@ let queryDB = (request, obj, callback) => {
   MongoClient.connect(url, (err, db) => {
     let collection
     switch (request) {
-      case 'new-message':
+      case 'new-messages':
         collection = db.collection('messages')
-        collection.insert(obj)
-        response = 'Message successfully stored.'
-        db.close()
+        collection.remove({}, (err, result) => {
+          if (result) {
+            for (var i = 0; i < obj.messages.length; i++) {
+              collection.insert(obj.messages[i])
+              if (i === obj.messages.length - 1) {
+                callback({'message': 'complete'})
+                db.close()
+              }
+            }
+          }
+          if (err) {
+            console.log(err)
+            callback(err)
+          }
+        })        
         break
       case 'delete-message':
         collection = db.collection('messages')
@@ -95,6 +118,10 @@ let queryDB = (request, obj, callback) => {
           }
           db.close()
         })
+        break
+      case 'update-message-order':
+        collection = db.collection('messages'
+      )
         break
       case 'get-controls':
         let controlResponse = {}
