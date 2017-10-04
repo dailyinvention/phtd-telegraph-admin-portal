@@ -39,7 +39,6 @@ app.post('/change-messages', jsonParser, (request, response) => {
 })
 
 app.put('/update-message-value', jsonParser, (request, response) => {
-  console.log('request: ' + JSON.stringify(request.body))
   let message = request.body.message
   let timestamp = request.body.timestamp
   let order = request.body.order
@@ -100,7 +99,6 @@ let queryDB = (request, obj, callback) => {
         break
       case 'update-message-value':
         collection = db.collection('messages')
-        console.log('payload', JSON.stringify(obj))
         collection.update(
           { 'timestamp': obj.timestamp },
           { 'message': obj.message,

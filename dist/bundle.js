@@ -4836,6 +4836,15 @@ var ControlStore = /** @class */ (function () {
             }
         });
     };
+    ControlStore.prototype.updateMessageValue = function (payload) {
+        var _this = this;
+        modelServices_1.callPromise('PUT', '/update-message-value', payload).then(function (data) {
+            if (data) {
+                console.log(data);
+                _this.getControls();
+            }
+        });
+    };
     __decorate([
         mobx_1.observable
     ], ControlStore.prototype, "controls", void 0);
@@ -4848,6 +4857,9 @@ var ControlStore = /** @class */ (function () {
     __decorate([
         mobx_1.action
     ], ControlStore.prototype, "changeMessages", null);
+    __decorate([
+        mobx_1.action
+    ], ControlStore.prototype, "updateMessageValue", null);
     return ControlStore;
 }());
 var controlStore = new ControlStore;
@@ -5101,7 +5113,8 @@ var NewMessage = /** @class */ (function (_super) {
         _this.addMessage = function () {
             var payloadMessages = _this.props.store.controls.messages;
             _this.timeStamp = Date.now();
-            var emptyMessage = { 'message': '', 'timestamp': _this.timeStamp, 'order': 1 };
+            _this.order = 1;
+            var emptyMessage = { 'message': '', 'timestamp': _this.timeStamp, 'order': _this.order };
             payloadMessages = (payloadMessages[0]) ? utils_1.shiftOrder(payloadMessages, 2) : [];
             payloadMessages.push(emptyMessage);
             var payload = {
@@ -5125,15 +5138,27 @@ var NewMessage = /** @class */ (function (_super) {
             _this.props.store.changeMessages(payload, true);
             _this.changeDisplay();
         };
+        // Updates message value when value entered in input field
+        _this.handleChange = function (e) {
+            _this.fieldValue = e.target.value;
+            var payload = {
+                message: _this.fieldValue,
+                timestamp: _this.timeStamp,
+                order: _this.order
+            };
+            _this.props.store.updateMessageValue(payload);
+            //controlStore.getControls()
+        };
         return _this;
     }
     NewMessage.prototype.render = function () {
         var _this = this;
         return ((this.addMessageDisplay) ?
             React.createElement("div", null,
-                React.createElement("input", { type: 'text', name: 'newMessage' }),
+                React.createElement("input", { type: 'text', name: 'newMessage', onChange: function (e) { return _this.handleChange(e); } }),
                 React.createElement("button", { onClick: function (e) {
                         _this.changeDisplay();
+                        _this.props.store.getControls();
                     } }, "Submit"),
                 React.createElement("button", { onClick: this.cancelMessage }, "Cancel")) :
             React.createElement("button", { onClick: function (e) {

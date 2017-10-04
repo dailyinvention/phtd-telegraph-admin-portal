@@ -32,6 +32,15 @@ class ControlStore {
       }
     })
   }
+
+  @action updateMessageValue (payload: Object) {
+    callPromise('PUT', '/update-message-value', payload).then((data: string) => {
+      if (data) {
+        console.log(data)
+        this.getControls()
+      }
+    })
+  }
 }
 
 let controlStore = new ControlStore

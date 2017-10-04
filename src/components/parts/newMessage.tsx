@@ -12,6 +12,8 @@ interface Props {
 export class NewMessage extends React.Component<Props, null> {
   @observable addMessageDisplay: boolean = false
   private timeStamp: number
+  private order: number
+  private fieldValue: string
 
   private changeDisplay = () => {
     this.addMessageDisplay = (this.addMessageDisplay) ? false : true
@@ -21,7 +23,8 @@ export class NewMessage extends React.Component<Props, null> {
   private addMessage = () => {
     let payloadMessages = this.props.store.controls.messages
     this.timeStamp = Date.now()
-    let emptyMessage = { 'message': '', 'timestamp': this.timeStamp, 'order': 1 }
+    this.order  = 1
+    let emptyMessage = { 'message': '', 'timestamp': this.timeStamp, 'order': this.order }
     payloadMessages = (payloadMessages[0]) ? shiftOrder(payloadMessages, 2) : []
     payloadMessages.push(emptyMessage)
     let payload = {
@@ -47,13 +50,27 @@ export class NewMessage extends React.Component<Props, null> {
     this.changeDisplay()
   }
 
+  // Updates message value when value entered in input field
+  private handleChange = (e: any) => {
+    this.fieldValue = e.target.value
+    let payload: Object = { 
+      message: this.fieldValue,
+      timestamp: this.timeStamp,
+      order: this.order
+    }
+
+    this.props.store.updateMessageValue(payload)
+    //controlStore.getControls()
+  }
+
   render() {
     return (
     (this.addMessageDisplay) ? 
       <div>
-        <input type='text' name='newMessage' />
+        <input type='text' name='newMessage' onChange={(e) => this.handleChange(e)}  />
           <button onClick={(e) => { 
               this.changeDisplay()
+              this.props.store.getControls()
             }
           }
         >Submit</button>
