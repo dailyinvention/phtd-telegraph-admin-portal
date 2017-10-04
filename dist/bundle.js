@@ -5097,15 +5097,33 @@ var NewMessage = /** @class */ (function (_super) {
         _this.changeDisplay = function () {
             _this.addMessageDisplay = (_this.addMessageDisplay) ? false : true;
         };
+        // Initiates when 'New Message' button clicked
         _this.addMessage = function () {
             var payloadMessages = _this.props.store.controls.messages;
-            var emptyMessage = { 'message': '', 'timestamp': Date.now(), 'order': 1 };
+            _this.timeStamp = Date.now();
+            var emptyMessage = { 'message': '', 'timestamp': _this.timeStamp, 'order': 1 };
             payloadMessages = (payloadMessages[0]) ? utils_1.shiftOrder(payloadMessages, 2) : [];
             payloadMessages.push(emptyMessage);
             var payload = {
                 'messages': payloadMessages
             };
-            _this.props.store.newMessages(payload);
+            _this.props.store.changeMessages(payload);
+        };
+        // Initiates when 'Cancel' button clicked.  Removes empty message from database.
+        _this.cancelMessage = function () {
+            var payloadMessages = _this.props.store.controls.messages;
+            var newPayloadMessages = [];
+            payloadMessages.map(function (payloadMessage) {
+                if (payloadMessage.timestamp !== _this.timeStamp) {
+                    newPayloadMessages.push(payloadMessage);
+                }
+            });
+            payloadMessages = utils_1.shiftOrder(newPayloadMessages, 1);
+            var payload = {
+                messages: payloadMessages
+            };
+            _this.props.store.changeMessages(payload, true);
+            _this.changeDisplay();
         };
         return _this;
     }
@@ -5117,7 +5135,7 @@ var NewMessage = /** @class */ (function (_super) {
                 React.createElement("button", { onClick: function (e) {
                         _this.changeDisplay();
                     } }, "Submit"),
-                React.createElement("button", null, "Cancel")) :
+                React.createElement("button", { onClick: this.cancelMessage }, "Cancel")) :
             React.createElement("button", { onClick: function (e) {
                     _this.changeDisplay();
                     _this.addMessage();
