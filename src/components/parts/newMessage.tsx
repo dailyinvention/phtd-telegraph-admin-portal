@@ -30,7 +30,7 @@ export class NewMessage extends React.Component<Props, null> {
     let payload = {
       'messages': payloadMessages
     }
-    this.props.store.changeMessages(payload)
+    this.props.store.changeMessages(payload, true)
   }
 
   // Initiates when 'Cancel' button clicked.  Removes empty message from database.
