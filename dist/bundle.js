@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -4764,7 +4764,7 @@ if (typeof __MOBX_DEVTOOLS_GLOBAL_HOOK__ === "object") {
 
 /* harmony default export */ __webpack_exports__["default"] = (everything);
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(7)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(8)))
 
 /***/ }),
 /* 3 */
@@ -4778,6 +4778,25 @@ module.exports = ReactDOM;
 
 "use strict";
 
+Object.defineProperty(exports, "__esModule", { value: true });
+var shiftOrder = function (array, startNum) {
+    var newArray = [];
+    array.map(function (item) {
+        item.order = startNum;
+        newArray.push(item);
+        startNum++;
+    });
+    return newArray;
+};
+exports.shiftOrder = shiftOrder;
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -4786,7 +4805,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var mobx_1 = __webpack_require__(2);
-var modelServices_1 = __webpack_require__(13);
+var modelServices_1 = __webpack_require__(14);
 var ControlStore = /** @class */ (function () {
     function ControlStore() {
     }
@@ -4806,19 +4825,14 @@ var ControlStore = /** @class */ (function () {
             }
         });
     };
-    ControlStore.prototype.deleteMessage = function (payload) {
+    ControlStore.prototype.changeMessages = function (payload, reloadMessages) {
         var _this = this;
-        modelServices_1.callPromise('DELETE', '/delete-message', payload).then(function (data) {
+        modelServices_1.callPromise('POST', '/change-messages', payload).then(function (data) {
             if (data) {
                 console.log(data);
-                _this.getControls();
-            }
-        });
-    };
-    ControlStore.prototype.newMessages = function (payload) {
-        modelServices_1.callPromise('POST', '/new-messages', payload).then(function (data) {
-            if (data) {
-                console.log(data);
+                if (reloadMessages) {
+                    _this.getControls();
+                }
             }
         });
     };
@@ -4833,10 +4847,7 @@ var ControlStore = /** @class */ (function () {
     ], ControlStore.prototype, "updateControlValue", null);
     __decorate([
         mobx_1.action
-    ], ControlStore.prototype, "deleteMessage", null);
-    __decorate([
-        mobx_1.action
-    ], ControlStore.prototype, "newMessages", null);
+    ], ControlStore.prototype, "changeMessages", null);
     return ControlStore;
 }());
 var controlStore = new ControlStore;
@@ -4844,7 +4855,7 @@ exports.default = controlStore;
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4852,12 +4863,12 @@ exports.default = controlStore;
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var ReactDOM = __webpack_require__(3);
-var mainContainer_1 = __webpack_require__(6);
+var mainContainer_1 = __webpack_require__(7);
 ReactDOM.render(React.createElement(mainContainer_1.MainContainer, null), document.getElementById("portal"));
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4881,9 +4892,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var mobx_react_1 = __webpack_require__(1);
-var messages_1 = __webpack_require__(8);
-var controls_1 = __webpack_require__(11);
-var controlStore_1 = __webpack_require__(4);
+var messages_1 = __webpack_require__(9);
+var controls_1 = __webpack_require__(12);
+var controlStore_1 = __webpack_require__(5);
 // Initial main container object
 var MainContainer = /** @class */ (function (_super) {
     __extends(MainContainer, _super);
@@ -4909,7 +4920,7 @@ exports.MainContainer = MainContainer;
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports) {
 
 var g;
@@ -4936,7 +4947,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4960,8 +4971,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var mobx_react_1 = __webpack_require__(1);
-var message_1 = __webpack_require__(9);
-var newMessage_1 = __webpack_require__(10);
+var message_1 = __webpack_require__(10);
+var newMessage_1 = __webpack_require__(11);
+var utils_1 = __webpack_require__(4);
 // Messages container part
 var Messages = /** @class */ (function (_super) {
     __extends(Messages, _super);
@@ -4969,7 +4981,18 @@ var Messages = /** @class */ (function (_super) {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.messageList = [];
         _this.deleteClick = function (timestamp) {
-            _this.props.store.deleteMessage({ 'timestamp': timestamp });
+            var payloadMessages = _this.props.store.controls.messages;
+            var newPayloadMessages = [];
+            payloadMessages.map(function (payloadMessage) {
+                if (payloadMessage.timestamp !== timestamp) {
+                    newPayloadMessages.push(payloadMessage);
+                }
+            });
+            payloadMessages = utils_1.shiftOrder(newPayloadMessages, 1);
+            var payload = {
+                messages: payloadMessages
+            };
+            _this.props.store.changeMessages(payload, true);
         };
         return _this;
     }
@@ -4997,7 +5020,7 @@ exports.Messages = Messages;
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5039,7 +5062,7 @@ exports.Message = Message;
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5064,6 +5087,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var mobx_1 = __webpack_require__(2);
 var mobx_react_1 = __webpack_require__(1);
+var utils_1 = __webpack_require__(4);
 // Messages container part
 var NewMessage = /** @class */ (function (_super) {
     __extends(NewMessage, _super);
@@ -5073,19 +5097,10 @@ var NewMessage = /** @class */ (function (_super) {
         _this.changeDisplay = function () {
             _this.addMessageDisplay = (_this.addMessageDisplay) ? false : true;
         };
-        _this.shiftOrder = function (array, startNum) {
-            var newArray = [];
-            array.map(function (item) {
-                item.order = startNum;
-                newArray.push(item);
-                startNum++;
-            });
-            return newArray;
-        };
         _this.addMessage = function () {
             var payloadMessages = _this.props.store.controls.messages;
             var emptyMessage = { 'message': '', 'timestamp': Date.now(), 'order': 1 };
-            payloadMessages = _this.shiftOrder(payloadMessages, 2);
+            payloadMessages = (payloadMessages[0]) ? utils_1.shiftOrder(payloadMessages, 2) : [];
             payloadMessages.push(emptyMessage);
             var payload = {
                 'messages': payloadMessages
@@ -5120,7 +5135,7 @@ exports.NewMessage = NewMessage;
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5144,7 +5159,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var mobx_react_1 = __webpack_require__(1);
-var control_1 = __webpack_require__(12);
+var control_1 = __webpack_require__(13);
 // Messages container part
 var Controls = /** @class */ (function (_super) {
     __extends(Controls, _super);
@@ -5172,7 +5187,7 @@ exports.Controls = Controls;
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5197,7 +5212,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var mobx_react_1 = __webpack_require__(1);
 var mobx_1 = __webpack_require__(2);
-var controlStore_1 = __webpack_require__(4);
+var controlStore_1 = __webpack_require__(5);
 // Messages container part
 var Control = /** @class */ (function (_super) {
     __extends(Control, _super);
@@ -5244,7 +5259,7 @@ exports.Control = Control;
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

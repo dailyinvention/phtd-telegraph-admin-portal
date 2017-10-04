@@ -8,7 +8,6 @@ const jsonParser = bodyParser.json()
 const url = 'mongodb://localhost:27017/phtd'
 let dbResponse
 
-
 // Create listener on port 3000
 app.listen(3000, () => {
   console.log('listening on 3000')
@@ -29,10 +28,10 @@ app.get('/*', (req, res, next) => {
 })
 
 // When posting new messages store in database
-app.post('/new-messages', jsonParser, (request, response) => {
+app.post('/change-messages', jsonParser, (request, response) => {
   let messages = request.body.messages
   console.log('Messages: ' + JSON.stringify(messages))
-  dbResponse = queryDB('new-messages', { 'messages': messages }, (dbResponse) => {
+  dbResponse = queryDB('change-messages', { 'messages': messages }, (dbResponse) => {
     console.log(JSON.stringify(dbResponse))
     response.type('json')
     response.json(dbResponse)
@@ -44,16 +43,6 @@ app.put('/update-message', jsonParser, (request, response) => {
   let timestamp = request.body.timestamp
   dbResponse = queryDB('update-message', { 'message': message, 'timestamp': timestamp }, (dbResponse) => {
     console.log('dbResponse: ' + JSON.stringify(dbResponse))
-    response.type('json')
-    response.json(dbResponse)
-  })
-})
-
-// When posting new messages store in database
-app.delete('/delete-message', jsonParser, (request, response) => {
-  let timestamp = request.body.timestamp
-  queryDB('delete-message', { 'timestamp': timestamp }, (dbResponse) => {
-    console.log(dbResponse)
     response.type('json')
     response.json(dbResponse)
   })
@@ -89,7 +78,7 @@ let queryDB = (request, obj, callback) => {
   MongoClient.connect(url, (err, db) => {
     let collection
     switch (request) {
-      case 'new-messages':
+      case 'change-messages':
         collection = db.collection('messages')
         collection.remove({}, (err, result) => {
           if (result) {
@@ -105,20 +94,7 @@ let queryDB = (request, obj, callback) => {
             console.log(err)
             callback(err)
           }
-        })        
-        break
-      case 'delete-message':
-        collection = db.collection('messages')
-        collection.remove(obj, null, (err, result) => {
-          console.log(obj)
-          if (result) {
-            callback(result)
-          }
-          if (err) {
-            callback(err)
-          }
-          db.close()
-        })
+        })      
         break
       case 'update-message-order':
         collection = db.collection('messages'

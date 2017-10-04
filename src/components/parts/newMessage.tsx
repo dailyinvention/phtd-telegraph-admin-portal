@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { observable } from 'mobx'
 import { observer } from 'mobx-react'
+import { shiftOrder } from '../../services/utils'
 
 interface Props {
   store: any
@@ -15,20 +16,10 @@ export class NewMessage extends React.Component<Props, null> {
     this.addMessageDisplay = (this.addMessageDisplay) ? false : true
   }
 
-  private shiftOrder = (array: { message: string, timestamp: number, order: number }[], startNum: number) => {
-    let newArray: Array<object> = []
-    array.map((item) => {
-      item.order = startNum
-      newArray.push(item)
-      startNum++
-    })
-    return newArray
-  }
-
   private addMessage = () => {
     let payloadMessages = this.props.store.controls.messages
     let emptyMessage = { 'message': '', 'timestamp': Date.now(), 'order': 1 }
-    payloadMessages = this.shiftOrder(payloadMessages, 2)
+    payloadMessages = (payloadMessages[0]) ? shiftOrder(payloadMessages, 2) : []
     payloadMessages.push(emptyMessage)
     let payload = {
       'messages': payloadMessages

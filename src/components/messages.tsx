@@ -2,6 +2,7 @@ import * as React from 'react'
 import { observer } from 'mobx-react'
 import { Message } from './parts/message'
 import { NewMessage } from './parts/newMessage'
+import { shiftOrder } from '../services/utils'
 
 interface Props {
   controls: { messages: Array<object> }
@@ -15,7 +16,18 @@ export class Messages extends React.Component<Props, null> {
   public displayNewMessage: boolean
 
   private deleteClick = (timestamp: number) => {
-    this.props.store.deleteMessage({'timestamp': timestamp})
+    let payloadMessages = this.props.store.controls.messages
+    let newPayloadMessages: { message: string, timestamp: number, order: number }[] = []
+    payloadMessages.map((payloadMessage: { message: string, timestamp: number, order: number }) => {
+      if (payloadMessage.timestamp !== timestamp) {
+        newPayloadMessages.push(payloadMessage)
+      }
+    })
+    payloadMessages = shiftOrder(newPayloadMessages, 1)
+    let payload = {
+      messages: payloadMessages
+    }
+    this.props.store.changeMessages(payload, true)
   }
 
   render() {

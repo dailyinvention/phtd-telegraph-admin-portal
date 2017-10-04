@@ -22,19 +22,13 @@ class ControlStore {
     })
   }
 
-  @action deleteMessage (payload: Object) {
-    callPromise('DELETE', '/delete-message', payload).then((data: string) => {
+  @action changeMessages (payload: Object, reloadMessages?: boolean) {
+    callPromise('POST', '/change-messages', payload).then((data: string) => {
       if (data) {
         console.log(data)
-        this.getControls()
-      }
-    })
-  }
-
-  @action newMessages (payload: Object) {
-    callPromise('POST', '/new-messages', payload).then((data: string) => {
-      if (data) {
-        console.log(data)
+        if (reloadMessages) {
+          this.getControls()
+        }
       }
     })
   }
