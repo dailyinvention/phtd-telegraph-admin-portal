@@ -38,10 +38,12 @@ app.post('/change-messages', jsonParser, (request, response) => {
   })
 })
 
-app.put('/update-message', jsonParser, (request, response) => {
+app.put('/update-message-value', jsonParser, (request, response) => {
+  console.log('request: ' + JSON.stringify(request.body))
   let message = request.body.message
   let timestamp = request.body.timestamp
-  dbResponse = queryDB('update-message', { 'message': message, 'timestamp': timestamp }, (dbResponse) => {
+  let order = request.body.order
+  dbResponse = queryDB('update-message-value', { 'message': message, 'timestamp': timestamp, 'order': order }, (dbResponse) => {
     console.log('dbResponse: ' + JSON.stringify(dbResponse))
     response.type('json')
     response.json(dbResponse)
@@ -96,9 +98,25 @@ let queryDB = (request, obj, callback) => {
           }
         })      
         break
-      case 'update-message-order':
-        collection = db.collection('messages'
-      )
+      case 'update-message-value':
+        collection = db.collection('messages')
+        console.log('payload', JSON.stringify(obj))
+        collection.update(
+          { 'timestamp': obj.timestamp },
+          { 'message': obj.message,
+            'timestamp': obj.timestamp,
+            'order': obj.order
+          },
+          (err, result) => {
+            if (result) {
+              callback(result)
+            }
+            if (err) {
+              callback(err)
+            }
+            db.close()
+          }
+        )
         break
       case 'get-controls':
         let controlResponse = {}
