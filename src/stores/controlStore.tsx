@@ -30,6 +30,14 @@ class ControlStore {
       }
     })
   }
+
+  @action newMessages (payload: Object) {
+    callPromise('POST', '/new-messages', payload).then((data: string) => {
+      if (data) {
+        console.log(data)
+      }
+    })
+  }
 }
 
 let controlStore = new ControlStore

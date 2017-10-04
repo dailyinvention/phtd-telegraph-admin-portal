@@ -39,9 +39,10 @@ app.post('/new-messages', jsonParser, (request, response) => {
   })
 })
 
-app.post('/update-message', jsonParser, (request, response) => {
-  let messages = JSON.parse(request.body).messages
-  dbResponse = queryDB('update-message', { 'messages': messages }, (dbResponse) => {
+app.put('/update-message', jsonParser, (request, response) => {
+  let message = request.body.message
+  let timestamp = request.body.timestamp
+  dbResponse = queryDB('update-message', { 'message': message, 'timestamp': timestamp }, (dbResponse) => {
     console.log('dbResponse: ' + JSON.stringify(dbResponse))
     response.type('json')
     response.json(dbResponse)
@@ -160,7 +161,7 @@ let queryDB = (request, obj, callback) => {
 }
 
 let loadItems = (collection, callback) => {
-  collection.find().toArray(function (err, items) {
+  collection.find().sort({'order': 1}).toArray(function (err, items) {
     if (err) {
       console.log(err)
       callback(err)

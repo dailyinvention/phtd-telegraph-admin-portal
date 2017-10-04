@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
 import { Message } from './parts/message'
+import { NewMessage } from './parts/newMessage'
 
 interface Props {
   controls: { messages: Array<object> }
@@ -11,6 +12,7 @@ interface Props {
 @observer
 export class Messages extends React.Component<Props, null> {
   private messageList: Array<any> = []
+  public displayNewMessage: boolean
 
   private deleteClick = (timestamp: number) => {
     this.props.store.deleteMessage({'timestamp': timestamp})
@@ -31,7 +33,7 @@ export class Messages extends React.Component<Props, null> {
       })
     }
     return (
-      <ul>{(this.messageList[0]) && this.messageList }</ul>
+      <ul><NewMessage store={this.props.store} />{(this.messageList[0]) && this.messageList }</ul>
     )
   }
 }
