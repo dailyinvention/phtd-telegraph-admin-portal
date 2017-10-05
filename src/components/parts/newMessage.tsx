@@ -38,6 +38,7 @@ export class NewMessage extends React.Component<Props, null> {
   private timeStamp: number
   private order: number
   private fieldValue: string
+  private isNew: boolean
 
   private changeDisplay = () => {
     this.addMessageDisplay = (this.addMessageDisplay) ? false : true
@@ -47,8 +48,9 @@ export class NewMessage extends React.Component<Props, null> {
   private addMessage = () => {
     let payloadMessages = this.props.store.controls.messages
     this.timeStamp = Date.now()
-    this.order  = 1
-    let emptyMessage = { 'message': '', 'timestamp': this.timeStamp, 'order': this.order }
+    this.order = 1
+    this.isNew = true
+    let emptyMessage = { 'message': '', 'timestamp': this.timeStamp, 'order': this.order, 'isNew': this.isNew }
     payloadMessages = (payloadMessages[0]) ? shiftOrder(payloadMessages, 2) : []
     payloadMessages.push(emptyMessage)
     let payload = {
@@ -74,13 +76,28 @@ export class NewMessage extends React.Component<Props, null> {
     this.changeDisplay()
   }
 
+  private submitMessage = () => {
+    let payloadMessages = this.props.store.controls.messages
+    let newPayloadMessages: { message: string, timestamp: number, order: number, isNew: boolean }[] = []
+    payloadMessages.map((payloadMessage: { message: string, timestamp: number, order: number, isNew: boolean }) => {
+      payloadMessage.isNew = false
+      newPayloadMessages.push(payloadMessage)
+    })
+    let payload = {
+      messages: payloadMessages
+    }
+    this.props.store.changeMessages(payload, true)
+    this.changeDisplay()    
+  }
+
   // Updates message value when value entered in input field
   private handleChange = (e: any) => {
     this.fieldValue = e.target.value
     let payload: Object = { 
       message: this.fieldValue,
       timestamp: this.timeStamp,
-      order: this.order
+      order: this.order,
+      isNew: this.isNew
     }
 
     this.props.store.updateMessageValue(payload)
@@ -93,8 +110,7 @@ export class NewMessage extends React.Component<Props, null> {
       <div>
         <StyledInput type='text' name='newMessage' onChange={(e) => this.handleChange(e)}  />
           <StyledButton onClick={(e) => { 
-              this.changeDisplay()
-              this.props.store.getControls()
+              this.submitMessage()
             }
           }
         >Submit</StyledButton>

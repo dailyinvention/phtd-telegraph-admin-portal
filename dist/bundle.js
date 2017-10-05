@@ -10015,7 +10015,7 @@ var utils_1 = __webpack_require__(11);
 var styled_components_1 = __webpack_require__(1);
 var styles_1 = __webpack_require__(5);
 var MessagesContainer = (_a = ["\n  background-color: ", ";\n  display: block;\n  padding: 10px;\n  margin: 0;\n  border-radius: 2px;\n  box-shadow: 1px 1px 1px #515151;\n  list-style: none;\n"], _a.raw = ["\n  background-color: ", ";\n  display: block;\n  padding: 10px;\n  margin: 0;\n  border-radius: 2px;\n  box-shadow: 1px 1px 1px #515151;\n  list-style: none;\n"], styled_components_1.default.ul(_a, styles_1.styles.lightPrimaryColor));
-var MessagesLI = (_b = ["\n  display: block;\n  margin: 10px;\n  padding: 20px;\n  background-color: ", ";\n  box-shadow: 1px 1px 1px #999;\n  font-family: ", ";\n  color: ", ";\n  font-size: 17px;\n  border: 1px solid ", ";\n  && span {\n    line-height: 50px;\n  }\n"], _b.raw = ["\n  display: block;\n  margin: 10px;\n  padding: 20px;\n  background-color: ", ";\n  box-shadow: 1px 1px 1px #999;\n  font-family: ", ";\n  color: ", ";\n  font-size: 17px;\n  border: 1px solid ", ";\n  && span {\n    line-height: 50px;\n  }\n"], styled_components_1.default.li(_b, styles_1.styles.textPrimaryColor, styles_1.styles.fontFamily, styles_1.styles.primaryTextColor, styles_1.styles.dividerColor));
+var MessagesLI = (_b = ["\n  display: block;\n  margin: 10px;\n  padding: 20px;\n  background-color: ", ";\n  box-shadow: 1px 1px 1px #999;\n  font-family: ", ";\n  color: ", ";\n  font-size: 17px;\n  border: 1px solid ", ";\n  && span {\n    line-height: 50px;\n  }\n"], _b.raw = ["\n  display: block;\n  margin: 10px;\n  padding: 20px;\n  background-color: ", ";\n  box-shadow: 1px 1px 1px #999;\n  font-family: ", ";\n  color: ", ";\n  font-size: 17px;\n  border: 1px solid ", ";\n  && span {\n    line-height: 50px;\n  }\n"], styled_components_1.default.li(_b, function (props) { return (props.isNew) ? styles_1.styles.accentColor : styles_1.styles.textPrimaryColor; }, styles_1.styles.fontFamily, styles_1.styles.primaryTextColor, styles_1.styles.dividerColor));
 var DeleteButton = (_c = ["\n  border-radius: 50%;\n  background-color: ", ";\n  border: 1px solid #BDBDBD;\n  float: right;\n  && img {\n    opacity: 0.5;\n  }\n  cursor: pointer;\n"], _c.raw = ["\n  border-radius: 50%;\n  background-color: ", ";\n  border: 1px solid #BDBDBD;\n  float: right;\n  && img {\n    opacity: 0.5;\n  }\n  cursor: pointer;\n"], styled_components_1.default.button(_c, styles_1.styles.lightPrimaryColor));
 var ClearFloat = (_d = ["\n  clear: both;\n"], _d.raw = ["\n  clear: both;\n"
     // Messages container part
@@ -10047,11 +10047,17 @@ var Messages = /** @class */ (function (_super) {
         if (this.props.controls) {
             this.messageList = [];
             this.props.controls.messages.map(function (messageObj) {
-                _this.messageList.push(React.createElement(MessagesLI, { key: messageObj.timestamp },
-                    React.createElement(message_1.Message, null, messageObj.message),
-                    React.createElement(DeleteButton, { onClick: function (e) { _this.deleteClick(messageObj.timestamp); } },
-                        React.createElement("img", { src: '/images/deletecustom.png', alt: 'Delete button' })),
-                    React.createElement(ClearFloat, null)));
+                if (!messageObj.isNew) {
+                    _this.messageList.push(React.createElement(MessagesLI, { key: messageObj.timestamp, isNew: false },
+                        React.createElement(message_1.Message, null, messageObj.message),
+                        React.createElement(DeleteButton, { onClick: function (e) { _this.deleteClick(messageObj.timestamp); } },
+                            React.createElement("img", { src: '/images/deletecustom.png', alt: 'Delete button' })),
+                        React.createElement(ClearFloat, null)));
+                }
+                else {
+                    _this.messageList.push(React.createElement(MessagesLI, { key: messageObj.timestamp, isNew: true },
+                        React.createElement(message_1.Message, null, messageObj.message)));
+                }
             });
         }
         return (React.createElement(MessagesContainer, null,
@@ -10156,7 +10162,8 @@ var NewMessage = /** @class */ (function (_super) {
             var payloadMessages = _this.props.store.controls.messages;
             _this.timeStamp = Date.now();
             _this.order = 1;
-            var emptyMessage = { 'message': '', 'timestamp': _this.timeStamp, 'order': _this.order };
+            _this.isNew = true;
+            var emptyMessage = { 'message': '', 'timestamp': _this.timeStamp, 'order': _this.order, 'isNew': _this.isNew };
             payloadMessages = (payloadMessages[0]) ? utils_1.shiftOrder(payloadMessages, 2) : [];
             payloadMessages.push(emptyMessage);
             var payload = {
@@ -10180,13 +10187,27 @@ var NewMessage = /** @class */ (function (_super) {
             _this.props.store.changeMessages(payload, true);
             _this.changeDisplay();
         };
+        _this.submitMessage = function () {
+            var payloadMessages = _this.props.store.controls.messages;
+            var newPayloadMessages = [];
+            payloadMessages.map(function (payloadMessage) {
+                payloadMessage.isNew = false;
+                newPayloadMessages.push(payloadMessage);
+            });
+            var payload = {
+                messages: payloadMessages
+            };
+            _this.props.store.changeMessages(payload, true);
+            _this.changeDisplay();
+        };
         // Updates message value when value entered in input field
         _this.handleChange = function (e) {
             _this.fieldValue = e.target.value;
             var payload = {
                 message: _this.fieldValue,
                 timestamp: _this.timeStamp,
-                order: _this.order
+                order: _this.order,
+                isNew: _this.isNew
             };
             _this.props.store.updateMessageValue(payload);
             //controlStore.getControls()
@@ -10199,8 +10220,7 @@ var NewMessage = /** @class */ (function (_super) {
             React.createElement("div", null,
                 React.createElement(StyledInput, { type: 'text', name: 'newMessage', onChange: function (e) { return _this.handleChange(e); } }),
                 React.createElement(StyledButton, { onClick: function (e) {
-                        _this.changeDisplay();
-                        _this.props.store.getControls();
+                        _this.submitMessage();
                     } }, "Submit"),
                 React.createElement(StyledButton, { onClick: this.cancelMessage }, "Cancel")) :
             React.createElement(StyledButton, { onClick: function (e) {

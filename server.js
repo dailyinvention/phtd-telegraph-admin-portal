@@ -42,7 +42,8 @@ app.put('/update-message-value', jsonParser, (request, response) => {
   let message = request.body.message
   let timestamp = request.body.timestamp
   let order = request.body.order
-  dbResponse = queryDB('update-message-value', { 'message': message, 'timestamp': timestamp, 'order': order }, (dbResponse) => {
+  let isNew = (request.body.isNew) ? request.body.isNew : null
+  dbResponse = queryDB('update-message-value', { 'message': message, 'timestamp': timestamp, 'order': order, 'isNew': isNew }, (dbResponse) => {
     console.log('dbResponse: ' + JSON.stringify(dbResponse))
     response.type('json')
     response.json(dbResponse)
@@ -103,7 +104,8 @@ let queryDB = (request, obj, callback) => {
           { 'timestamp': obj.timestamp },
           { 'message': obj.message,
             'timestamp': obj.timestamp,
-            'order': obj.order
+            'order': obj.order,
+            'isNew': (obj.isNew) ? obj.isNew : null
           },
           (err, result) => {
             if (result) {

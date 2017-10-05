@@ -24,7 +24,7 @@ const MessagesLI = styled.li`
   display: block;
   margin: 10px;
   padding: 20px;
-  background-color: ${ styles.textPrimaryColor };
+  background-color: ${(props: { isNew: boolean }) => (props.isNew) ? styles.accentColor : styles.textPrimaryColor };
   box-shadow: 1px 1px 1px #999;
   font-family: ${ styles.fontFamily };
   color: ${ styles.primaryTextColor };
@@ -73,15 +73,23 @@ export class Messages extends React.Component<Props, null> {
   render() {
     if (this.props.controls) {
       this.messageList = []
-      this.props.controls.messages.map((messageObj: { message: string, timestamp: number }) => {
-        this.messageList.push(
-          <MessagesLI key={messageObj.timestamp}>
+      this.props.controls.messages.map((messageObj: { message: string, timestamp: number, isNew?: boolean }) => {
+        if (!messageObj.isNew) {
+          this.messageList.push(
+            <MessagesLI key={messageObj.timestamp} isNew={false}>
+              <Message>{messageObj.message}</Message>
+              <DeleteButton onClick={(e: any) => { this.deleteClick(messageObj.timestamp) }} >
+                <img src='/images/deletecustom.png' alt='Delete button' />
+              </DeleteButton><ClearFloat />
+            </MessagesLI>
+          )
+        } else {
+          this.messageList.push(
+          <MessagesLI key={messageObj.timestamp} isNew={true}>
             <Message>{messageObj.message}</Message>
-            <DeleteButton onClick={(e: any) => { this.deleteClick(messageObj.timestamp)}} >
-              <img src='/images/deletecustom.png' alt='Delete button' />
-            </DeleteButton><ClearFloat />
           </MessagesLI>
-        )
+          )
+        }
       })
     }
     return (
