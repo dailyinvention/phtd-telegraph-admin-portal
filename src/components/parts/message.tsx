@@ -7,7 +7,7 @@ import { observer } from 'mobx-react'
 export class Message extends React.Component {
   render() {
     return (
-      <li>{this.props.children}</li>
+      <span>{this.props.children}</span>
     )
   }
 }

@@ -1,10 +1,25 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
 import { Control } from './parts/control'
+import styled from 'styled-components'
+import { styles } from '../styles'
 
 interface Props {
   controls: { controls: Array<object> }
 }
+
+const ControlsContainer = styled.ul`
+  background-color: ${ styles.lightPrimaryColor };
+  display: block;
+  padding: 10px;
+  margin: 10px 0px 0px 0px;
+  border-radius: 2px;
+  box-shadow: 1px 1px 1px #515151;
+  list-style: none;
+  && li {
+    font-family: ${ styles.fontFamily }
+  }
+`
 
 // Messages container part
 @observer
@@ -20,7 +35,7 @@ export class Controls extends React.Component<Props, null> {
       })
     }
     return (
-      <ul>{(this.controlList[0]) && this.controlList }</ul>
+      <ControlsContainer>{(this.controlList[0]) && this.controlList }</ControlsContainer>
     )
   }
 }

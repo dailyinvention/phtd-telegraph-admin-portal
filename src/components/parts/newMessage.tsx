@@ -2,10 +2,34 @@ import * as React from 'react'
 import { observable } from 'mobx'
 import { observer } from 'mobx-react'
 import { shiftOrder } from '../../services/utils'
+import styled from 'styled-components'
+import { styles } from '../../styles'
 
 interface Props {
   store: any
 }
+
+const StyledButton = styled.button`
+  padding: 10px;
+  font-size: 16px;
+  margin: 10px 0px 10px 10px;
+  border-radius: 5px;
+  background-color: ${ styles.darkPrimaryColor };
+  color: ${ styles.textPrimaryColor };
+  cursor: pointer;
+  border: 0px;
+  box-shadow: 1px 1px 1px #999;
+  font-family: ${ styles.fontFamily };
+  &:hover {
+    background-color: ${ styles.defaultPrimaryColor };
+  }
+`
+const StyledInput = styled.input`
+  font-size: 14px;
+  padding: 10px;
+  height: 20px;
+  margin: 10px 0px 10px 10px;
+`
 
 // Messages container part
 @observer
@@ -67,20 +91,20 @@ export class NewMessage extends React.Component<Props, null> {
     return (
     (this.addMessageDisplay) ? 
       <div>
-        <input type='text' name='newMessage' onChange={(e) => this.handleChange(e)}  />
-          <button onClick={(e) => { 
+        <StyledInput type='text' name='newMessage' onChange={(e) => this.handleChange(e)}  />
+          <StyledButton onClick={(e) => { 
               this.changeDisplay()
               this.props.store.getControls()
             }
           }
-        >Submit</button>
-        <button onClick={this.cancelMessage}>Cancel</button>
+        >Submit</StyledButton>
+        <StyledButton onClick={this.cancelMessage}>Cancel</StyledButton>
       </div> : 
-      <button onClick={(e) => {
+      <StyledButton onClick={(e) => {
           this.changeDisplay()
           this.addMessage()
         }
-      }>New Message</button>
+      }>New Message</StyledButton>
     )
   }
 }
