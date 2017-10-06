@@ -23,12 +23,26 @@ const StyledButton = styled.button`
   &:hover {
     background-color: ${ styles.defaultPrimaryColor };
   }
+
+  @media only screen and (max-width : 426px) {
+    float: none;
+    display: inline-block;
+    width: 45%;
+  }
 `
 const StyledInput = styled.input`
   font-size: 14px;
   padding: 10px;
   height: 20px;
   margin: 10px 0px 10px 10px;
+
+  @media only screen and (max-width : 426px) {
+    height: 30px;
+    margin: 0px auto;
+    width: 91%;
+    box-sizing : border-box;
+    display: block;
+  }
 `
 
 // Messages container part

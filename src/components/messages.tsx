@@ -19,6 +19,10 @@ const MessagesContainer = styled.ul`
   border-radius: 2px;
   box-shadow: 1px 1px 1px #515151;
   list-style: none;
+
+  @media only screen and (max-width : 426px) {
+    padding: 20px;
+  }
 `
 const MessagesLI = styled.li`
   display: block;
@@ -27,11 +31,18 @@ const MessagesLI = styled.li`
   background-color: ${(props: { isNew: boolean }) => (props.isNew) ? styles.accentColor : styles.textPrimaryColor };
   box-shadow: 1px 1px 1px #999;
   font-family: ${ styles.fontFamily };
-  color: ${ styles.primaryTextColor };
+  color: ${(props: { isNew: boolean }) => (props.isNew) ? styles.lightPrimaryColor: styles.primaryTextColor };
   font-size: 17px;
   border: 1px solid ${ styles.dividerColor };
   && span {
     line-height: 50px;
+
+    @media only screen and (max-width : 426px) {
+      line-height: 30px;
+      display: block;
+      margin: 10px 0px 10px 0px;
+      text-align: center;
+    }
   }
 `
 const DeleteButton = styled.button`
@@ -43,6 +54,13 @@ const DeleteButton = styled.button`
     opacity: 0.5;
   }
   cursor: pointer;
+
+  @media only screen and (max-width : 426px) {
+    margin-top: 30px auto 0px auto;
+    float: none;
+    margin: 10px auto;
+    display: block;
+  }
 `
 
 const ClearFloat = styled.br`

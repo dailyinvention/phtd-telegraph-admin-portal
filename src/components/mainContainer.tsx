@@ -11,6 +11,10 @@ const ContainerDiv = styled.div`
   margin: 50px;
   padding: 10px;
   border-radius: 2px;
+
+  @media only screen and (max-width : 426px) {
+    margin: 10px;
+  }
 `
 const ContainerH1 = styled.h1`
   color: ${ styles.textPrimaryColor };
